@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent X-Ray · AI Agent 透视镜</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-loop" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.6-5.7L20 8.6"/><path d="M20 3v5.6h-5.6"/><path d="M20 12a8 8 0 0 1-13.6 5.7L4 15.4"/><path d="M4 21v-5.6h5.6"/></symbol>
+  <symbol id="i-request" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7 9h6M7 13h10M7 17h4"/><circle cx="17" cy="9" r="1.2"/></symbol>
+  <symbol id="i-stream" viewBox="0 0 24 24"><path d="M3 12h4l2-5 3 10 2.5-7 1.5 2h5"/></symbol>
+  <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0-5.6 5L4 16.4V20h3.6l4.9-4.9a4 4 0 0 0 5-5.6l-2.4 2.4-2.6-2.6 2.4-2.4Z"/></symbol>
+  <symbol id="i-context" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></symbol>
+  <symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M8.2 6h3.3a3 3 0 0 1 3 3v6a3 3 0 0 0 3 3h.3"/><path d="M8.2 18h3.3a3 3 0 0 0 3-3v-6a3 3 0 0 1 3-3h.3"/></symbol>
+  <symbol id="i-mcp" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><circle cx="5" cy="6" r="1.8"/><circle cx="19" cy="6" r="1.8"/><circle cx="5" cy="18" r="1.8"/><circle cx="19" cy="18" r="1.8"/><path d="M6.4 7.3 10 10.3M17.6 7.3 14 10.3M6.4 16.7 10 13.7M17.6 16.7 14 13.7"/></symbol>
+  <symbol id="i-skill" viewBox="0 0 24 24"><path d="M5 4.5h9l5 5V20H5Z"/><path d="M14 4.5V10h5"/><path d="M8.5 13h7M8.5 16.5h4.5"/></symbol>
+  <symbol id="i-subagent" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.4 3 7.4 7.5 9.5 4.5-2.1 7.5-5.1 7.5-9.5V6Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-memory" viewBox="0 0 24 24"><path d="M4 7.5h16v9H4z"/><path d="M8 7.5v9M16 7.5v9M4 10.5h4M4 13.5h4M16 10.5h4M16 13.5h4"/><path d="M7 4.5h10"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M6 21V4"/><path d="M6 4h11l-2 4 2 4H6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10-6.5Z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 2 6"/><path d="M4 5v5h5"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.3V16h6v-.2c0-.9.4-1.7 1-2.3A6 6 0 0 0 12 3Z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9Z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6Z"/><path d="M14 3v4h4"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7"/></symbol>
+  <symbol id="i-fork" viewBox="0 0 24 24"><circle cx="6" cy="5" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><path d="M6 7v10M18 7v3a4 4 0 0 1-4 4H8"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></symbol>
+  <symbol id="i-robot" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="12.5" r="1.2"/><circle cx="15" cy="12.5" r="1.2"/><path d="M12 3v4M9 16h6"/></symbol>
+  <symbol id="i-panel-left" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9 4v16"/></symbol>
+  <symbol id="i-panel-right" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M15 4v16"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polygon points="15.5 8.5 13.4 13.4 8.5 15.5 10.6 10.6 15.5 8.5"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.5 2.8 19.5h18.4Z"/><path d="M12 10v4.2M12 17h.01"/></symbol>
+</svg>
+
+<div id="app">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="iconbtn on" id="sideToggleBtn" title="收起/展开体验清单">
+        <svg class="ic"><use href="#i-panel-left"/></svg>
+      </button>
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".5"/><circle cx="16" cy="16" r="4" fill="currentColor"/><circle cx="16" cy="3" r="1.8" fill="currentColor"/><circle cx="29" cy="16" r="1.8" fill="currentColor"/><circle cx="16" cy="29" r="1.8" fill="currentColor"/><circle cx="3" cy="16" r="1.8" fill="currentColor"/><path d="M16 5v7M27 16h-7M16 27v-7M5 16h7" stroke="currentColor" stroke-width="1" opacity=".55"/></svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-name">Agent X-Ray</div>
+          <div class="brand-sub" data-i18n="appSub">AI Agent 透视镜</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="zoom-ctl" title="界面缩放 / UI Zoom">
+        <select id="zoomSelect" aria-label="Zoom">
+          <option value="0.5">50%</option>
+          <option value="0.75">75%</option>
+          <option value="0.9">90%</option>
+          <option value="1" selected>100%</option>
+          <option value="1.1">110%</option>
+          <option value="1.25">125%</option>
+          <option value="1.5">150%</option>
+          <option value="1.75">175%</option>
+          <option value="2">200%</option>
+        </select>
+      </div>
+      <button class="btn ghost tour-btn" id="tourBtn">
+        <svg class="ic"><use href="#i-compass"/></svg><span data-i18n="tour">新手教学</span>
+      </button>
+      <div class="seg" id="langSeg" role="group" aria-label="language">
+        <button data-lang="bi" class="on">中英</button>
+        <button data-lang="zh">中文</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <button class="iconbtn" id="themeBtn" title="切换主题 / Toggle theme">
+        <svg class="ic"><use href="#i-spark"/></svg>
+      </button>
+      <button class="iconbtn" id="resetAllBtn" title="清空学习进度">
+        <svg class="ic"><use href="#i-reset"/></svg>
+      </button>
+      <button class="iconbtn on" id="xrayToggleBtn" title="收起/展开 X-Ray 面板">
+        <svg class="ic"><use href="#i-panel-right"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="shell" id="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <div class="side-head">
+          <div class="side-title">
+            <span data-i18n="listTitle">体验清单</span>
+            <span class="side-count" id="doneCount">0 / 12</span>
+          </div>
+          <div class="side-progress"><i id="doneBar"></i></div>
+        </div>
+        <nav class="scn-list" id="scnList"></nav>
+        <div class="side-foot">
+          <div class="side-tip">
+            <svg class="ic"><use href="#i-bulb"/></svg>
+            <span data-i18n="sideTip">点击任意体验跳转；悬停可预览提示；完成过的会有 ✓。</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="console">
+      <div class="scn-head">
+        <div class="scn-head-top">
+          <div class="scn-icon" id="scnIcon"></div>
+          <div class="scn-titles">
+            <h1 id="scnTitle">—</h1>
+          </div>
+          <div class="scn-actions">
+            <button class="btn ghost" id="hintBtn">
+              <svg class="ic"><use href="#i-bulb"/></svg><span data-i18n="howTo">怎么玩</span><b class="badge" id="hintBadge">3</b>
+            </button>
+            <button class="btn ghost" id="playBtn">
+              <svg class="ic"><use href="#i-play"/></svg><span data-i18n="autoplay">自动演示</span>
+            </button>
+            <button class="btn icon" id="resetBtn" title="重置本场景">
+              <svg class="ic"><use href="#i-reset"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="scn-sub" id="scnSub">—</p>
+      </div>
+
+      <div class="stepbar" id="stepbar">
+        <span class="step-cue" data-i18n="stepJump">单步演示</span>
+        <div class="dots" id="stepDots"></div>
+        <div class="step-label" id="stepLabel"></div>
+      </div>
+
+      <div class="chat" id="chat"></div>
+
+      <div class="composer">
+        <div class="ctx-strip">
+          <span class="chip" id="ctxChip"><svg class="ic"><use href="#i-context"/></svg><b>0</b> tokens</span>
+          <span class="chip" id="streamChip">stream on</span>
+          <span class="chip" id="toolsChip">tools 6</span>
+          <button class="chip btnlike" id="sandboxBtn"><svg class="ic"><use href="#i-gear"/></svg><span data-i18n="params">请求参数</span></button>
+          <span class="offline"><i></i><span data-i18n="offline">离线模拟</span></span>
+        </div>
+        <div class="input-wrap">
+          <textarea id="composerInput" rows="1" placeholder=""></textarea>
+          <button class="sendbtn" id="sendBtn" title="发送">
+            <svg class="ic"><use href="#i-send"/></svg>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <section class="xray" id="xrayPanel">
+      <div class="xray-inner">
+        <div class="xray-head">
+          <div class="tabs" id="xrayTabs"></div>
+        </div>
+        <div class="xray-body" id="xrayBody"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<div id="modalRoot"></div>
+<div id="tourRoot"></div>
+<div id="tooltip" class="tooltip"></div>
+<div id="stepTip" class="step-tip"></div>
+
+<script src="data.js"></script>
+<script src="xray.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+[package]
+name = "agent-xray"
+version = "0.1.1"
+description = "Agent X-Ray — offline interactive explainer for AI coding agents"
+edition = "2021"
+rust-version = "1.77.2"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1" }
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
