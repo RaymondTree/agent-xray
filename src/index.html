@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#191813">
+<meta name="description" content="Agent X-Ray — 完全离线的 AI Coding Agent 内部原理解析与交互透视沙盒（12 个渐进式双语场景 + 5 标签 X-Ray 协议透视）">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>Agent X-Ray · AI Agent 透视镜</title>
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -43,31 +46,32 @@
   <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></symbol>
   <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></symbol>
   <symbol id="i-robot" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="12.5" r="1.2"/><circle cx="15" cy="12.5" r="1.2"/><path d="M12 3v4M9 16h6"/></symbol>
-  <symbol id="i-panel-left" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9 4v16"/></symbol>
-  <symbol id="i-panel-right" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M15 4v16"/></symbol>
   <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polygon points="15.5 8.5 13.4 13.4 8.5 15.5 10.6 10.6 15.5 8.5"/></symbol>
   <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.5 2.8 19.5h18.4Z"/><path d="M12 10v4.2M12 17h.01"/></symbol>
+  <symbol id="i-expand" viewBox="0 0 24 24"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></symbol>
+  <symbol id="i-compress" viewBox="0 0 24 24"><path d="M4 14h6v6M20 10h-6V4M10 14l-6 6M14 10l6-6"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z"/></symbol>
 </svg>
 
 <div id="app">
   <header class="topbar">
     <div class="topbar-left">
-      <button class="iconbtn on" id="sideToggleBtn" title="收起/展开体验清单">
-        <svg class="ic"><use href="#i-panel-left"/></svg>
-      </button>
       <div class="brand">
         <div class="brand-mark">
           <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".5"/><circle cx="16" cy="16" r="4" fill="currentColor"/><circle cx="16" cy="3" r="1.8" fill="currentColor"/><circle cx="29" cy="16" r="1.8" fill="currentColor"/><circle cx="16" cy="29" r="1.8" fill="currentColor"/><circle cx="3" cy="16" r="1.8" fill="currentColor"/><path d="M16 5v7M27 16h-7M16 27v-7M5 16h7" stroke="currentColor" stroke-width="1" opacity=".55"/></svg>
         </div>
         <div class="brand-text">
           <div class="brand-name">Agent X-Ray</div>
-          <div class="brand-sub" data-i18n="appSub">AI Agent 透视镜</div>
+          <div class="brand-sub" data-i18n="appSub">Interactive Internals</div>
         </div>
       </div>
+      <a class="iconbtn github-btn" id="githubBtn" href="https://github.com/raymondtree/agent-xray" target="_blank" rel="noopener noreferrer">
+        <svg class="ic ic-fill"><use href="#i-github"/></svg>
+      </a>
     </div>
 
     <div class="topbar-right">
-      <div class="zoom-ctl" title="界面缩放 / UI Zoom">
+      <div class="zoom-ctl" id="zoomCtl">
         <select id="zoomSelect" aria-label="Zoom">
           <option value="0.5">50%</option>
           <option value="0.75">75%</option>
@@ -81,21 +85,19 @@
         </select>
       </div>
       <button class="btn ghost tour-btn" id="tourBtn">
-        <svg class="ic"><use href="#i-compass"/></svg><span data-i18n="tour">新手教学</span>
+        <svg class="ic"><use href="#i-compass"/></svg><span data-i18n="tour">Guide Tour</span>
       </button>
       <div class="seg" id="langSeg" role="group" aria-label="language">
         <button data-lang="bi" class="on">中英</button>
         <button data-lang="zh">中文</button>
         <button data-lang="en">EN</button>
+        <button type="button" class="lang-cycle" id="langCycleBtn" aria-label="Switch language">中英</button>
       </div>
-      <button class="iconbtn" id="themeBtn" title="切换主题 / Toggle theme">
+      <button class="iconbtn" id="themeBtn">
         <svg class="ic"><use href="#i-spark"/></svg>
       </button>
-      <button class="iconbtn" id="resetAllBtn" title="清空学习进度">
+      <button class="iconbtn" id="resetAllBtn">
         <svg class="ic"><use href="#i-reset"/></svg>
-      </button>
-      <button class="iconbtn on" id="xrayToggleBtn" title="收起/展开 X-Ray 面板">
-        <svg class="ic"><use href="#i-panel-right"/></svg>
       </button>
     </div>
   </header>
@@ -105,16 +107,25 @@
       <div class="sidebar-inner">
         <div class="side-head">
           <div class="side-title">
-            <span data-i18n="listTitle">体验清单</span>
-            <span class="side-count" id="doneCount">0 / 12</span>
+            <span class="side-title-lbl" data-i18n="listTitle">Experiences</span>
           </div>
-          <div class="side-progress"><i id="doneBar"></i></div>
+          <div class="side-prog-row">
+            <div class="side-progress"><i id="doneBar"></i></div>
+          </div>
+          <span class="side-count" id="doneCount"><span class="sc-done">0</span><span class="sc-sep"> / </span><span class="sc-tot">12</span></span>
+          <button class="side-toggle on" id="sideToggleBtn" type="button">
+            <svg class="ic" viewBox="0 0 20 20" aria-hidden="true">
+              <rect x="2.25" y="2.25" width="15.5" height="15.5" rx="3"/>
+              <line x1="8" y1="2.25" x2="8" y2="17.75"/>
+              <path class="panel-arrow" d="M5.9 7.75 L4.2 10 L5.9 12.25"/>
+            </svg>
+          </button>
         </div>
         <nav class="scn-list" id="scnList"></nav>
         <div class="side-foot">
-          <div class="side-tip">
-            <svg class="ic"><use href="#i-bulb"/></svg>
-            <span data-i18n="sideTip">点击任意体验跳转；悬停可预览提示；完成过的会有 ✓。</span>
+          <div class="side-tip" id="sideTip">
+            <span class="side-tip-ic"><svg class="ic"><use href="#i-bulb"/></svg></span>
+            <div class="side-tip-text"><div class="side-tip-inner" data-i18n-bi="sideTip"></div></div>
           </div>
         </div>
       </div>
@@ -129,13 +140,20 @@
           </div>
           <div class="scn-actions">
             <button class="btn ghost" id="hintBtn">
-              <svg class="ic"><use href="#i-bulb"/></svg><span data-i18n="howTo">怎么玩</span><b class="badge" id="hintBadge">3</b>
+              <svg class="ic"><use href="#i-bulb"/></svg><span data-i18n="howTo">Guide</span><b class="badge" id="hintBadge">3</b>
             </button>
             <button class="btn ghost" id="playBtn">
-              <svg class="ic"><use href="#i-play"/></svg><span data-i18n="autoplay">自动演示</span>
+              <svg class="ic"><use href="#i-play"/></svg><span data-i18n="autoplay">Auto play</span>
             </button>
-            <button class="btn icon" id="resetBtn" title="重置本场景">
+            <button class="btn icon" id="resetBtn">
               <svg class="ic"><use href="#i-reset"/></svg>
+            </button>
+            <button class="btn icon xray-expand-btn" id="xrayExpandBtn" type="button" hidden>
+              <svg class="ic" viewBox="0 0 20 20" aria-hidden="true">
+                <rect x="2.25" y="2.25" width="15.5" height="15.5" rx="3"/>
+                <line x1="12" y1="2.25" x2="12" y2="17.75"/>
+                <path class="panel-arrow" d="M14.1 7.75 L15.8 10 L14.1 12.25"/>
+              </svg>
             </button>
           </div>
         </div>
@@ -143,7 +161,7 @@
       </div>
 
       <div class="stepbar" id="stepbar">
-        <span class="step-cue" data-i18n="stepJump">单步演示</span>
+        <span class="step-cue" data-i18n="stepJump">Step Jump</span>
         <div class="dots" id="stepDots"></div>
         <div class="step-label" id="stepLabel"></div>
       </div>
@@ -155,12 +173,12 @@
           <span class="chip" id="ctxChip"><svg class="ic"><use href="#i-context"/></svg><b>0</b> tokens</span>
           <span class="chip" id="streamChip">stream on</span>
           <span class="chip" id="toolsChip">tools 6</span>
-          <button class="chip btnlike" id="sandboxBtn"><svg class="ic"><use href="#i-gear"/></svg><span data-i18n="params">请求参数</span></button>
-          <span class="offline"><i></i><span data-i18n="offline">离线模拟</span></span>
+          <button class="chip btnlike" id="sandboxBtn"><svg class="ic"><use href="#i-gear"/></svg><span data-i18n="params">Request params</span></button>
+          <span class="offline"><i></i><span data-i18n="offline">Offline sim</span></span>
         </div>
         <div class="input-wrap">
           <textarea id="composerInput" rows="1" placeholder=""></textarea>
-          <button class="sendbtn" id="sendBtn" title="发送">
+          <button class="sendbtn" id="sendBtn">
             <svg class="ic"><use href="#i-send"/></svg>
           </button>
         </div>
@@ -171,6 +189,13 @@
       <div class="xray-inner">
         <div class="xray-head">
           <div class="tabs" id="xrayTabs"></div>
+          <button class="xray-toggle on" id="xrayToggleBtn" type="button">
+            <svg class="ic" viewBox="0 0 20 20" aria-hidden="true">
+              <rect x="2.25" y="2.25" width="15.5" height="15.5" rx="3"/>
+              <line x1="12" y1="2.25" x2="12" y2="17.75"/>
+              <path class="panel-arrow" d="M14.1 7.75 L15.8 10 L14.1 12.25"/>
+            </svg>
+          </button>
         </div>
         <div class="xray-body" id="xrayBody"></div>
       </div>
